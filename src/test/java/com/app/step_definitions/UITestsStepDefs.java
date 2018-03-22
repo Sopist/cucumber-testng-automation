@@ -4,10 +4,12 @@ import static org.testng.Assert.*;
 
 import java.util.concurrent.TimeUnit;
 
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 
 import com.app.pages.SuiteCRMDashboardPage;
 import com.app.pages.SuiteCRMLoginPage;
+import com.app.pages.SuiteCRMSreachResultsPage;
 import com.app.utilities.ConfigurationReader;
 import com.app.utilities.Driver;
 
@@ -21,6 +23,7 @@ public class UITestsStepDefs {
 	private WebDriver driver = Driver.getDriver();
 	SuiteCRMLoginPage loginPage = new SuiteCRMLoginPage();
 	SuiteCRMDashboardPage dashboardPage = new SuiteCRMDashboardPage();
+	SuiteCRMSreachResultsPage searchResultsPage = new SuiteCRMSreachResultsPage();
 
 	@Given("^I logged into suiteCRM$")
 	public void i_logged_into_suiteCRM() {
@@ -44,17 +47,28 @@ public class UITestsStepDefs {
 		assertTrue(dashboardPage.collaboration.isDisplayed());
 		assertTrue(dashboardPage.all.isDisplayed());
 	}
-	
+
 	@When("^I search for \"([^\"]*)\"$")
-	public void i_search_for(String arg1) {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+	public void i_search_for(String searchTerm) {
+		try {
+			assertTrue(dashboardPage.searchField.isDisplayed());
+		} catch (AssertionError e) {
+			dashboardPage.searchbutton.click();
+		}
+		dashboardPage.searchField.sendKeys(searchTerm + Keys.ENTER);
 	}
 
 	@Then("^link for user \"([^\"]*)\" should be displayed$")
-	public void link_for_user_should_be_displayed(String arg1) {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+	public void link_for_user_should_be_displayed(String searchTerm) {
+		assertTrue(searchResultsPage.resultLink(searchTerm).isDisplayed(), searchTerm+" was not displayed");
+	}
+	
+	@Then("^there should be (\\d+) result for \"([^\"]*)\"$")
+	public void there_should_be_result_for(int count, String searchTerm) {
+	    int actual = searchResultsPage.resultsLink(searchTerm).size();
+	    System.out.println(searchResultsPage.resultsLink(searchTerm).get(0));
+	    System.out.println(searchResultsPage.resultsLink(searchTerm).get(1));
+	    assertEquals(actual, count, "number of results did not match");
 	}
 
 }

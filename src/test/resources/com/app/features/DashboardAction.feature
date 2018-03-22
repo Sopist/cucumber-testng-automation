@@ -12,3 +12,4 @@ Scenario: Post a note on Dashboard
 	When I post "Hello Everyone"
 	Then Post should be displayed
 	Then I logout from application
+	

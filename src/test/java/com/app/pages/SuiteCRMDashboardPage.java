@@ -6,6 +6,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import com.app.step_definitions.CreateTask;
 import com.app.utilities.BrowserUtils;
 import com.app.utilities.Driver;
 
@@ -48,10 +49,20 @@ public class SuiteCRMDashboardPage {
 	@FindBy(xpath = "(//*[@id=\"logout_link\"])[3]")
 	public WebElement logoutLink;
 	
+	@FindBy(xpath = "(//button[@id='searchbutton'])[3]")
 	public WebElement searchbutton;
 	
-	@FindBy(id = "query_string")
+	@FindBy(xpath = "(//input[@id='query_string'])[5]")
 	public WebElement searchField;
+	
+	@FindBy(linkText = "Contacts")
+	public WebElement contacts;
+	
+	@FindBy(linkText = "CREATE")
+	public WebElement create;
+	
+	@FindBy(linkText = "Create Task")
+	public WebElement createTask;
 	
 	public void logout() {
 		Actions actions = new Actions(driver);
@@ -63,6 +74,14 @@ public class SuiteCRMDashboardPage {
 	public void postNote(String note) {
 		postField.sendKeys(note);
 		postButton.click();
+	}
+
+	public void clickCreateTask() {
+		Actions actions = new Actions(driver);
+		actions.moveToElement(create).perform();
+		
+		BrowserUtils.waitForVisibility(createTask, 2);
+		createTask.click();
 	}
 	
 }
